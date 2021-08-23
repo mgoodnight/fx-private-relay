@@ -96,6 +96,10 @@ def profile(request):
             'last_bounce_date': profile.last_bounce_date,
             'next_email_try': profile.next_email_try
         })
+    logger.error(
+        'Profile information',
+        extra={'relay_addresses': relay_addresses, 'domain_addresses': domain_addresses}
+    )
     return render(request, 'profile.html', context)
 
 
