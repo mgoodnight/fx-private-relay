@@ -155,7 +155,7 @@ class Profile(models.Model):
 def address_hash(address, subdomain=None, domain=DEFAULT_DOMAIN):
     if subdomain:
         return sha256(
-            f'{address}@{subdomain}'.encode('utf-8')
+            f'{address}@{subdomain}.{domain}'.encode('utf-8')
         ).hexdigest()
     if domain == settings.RELAY_FIREFOX_DOMAIN:
         return sha256(
@@ -288,6 +288,7 @@ class DomainAddress(models.Model):
     address = models.CharField(max_length=64)
     enabled = models.BooleanField(default=True)
     description = models.CharField(max_length=64, blank=True)
+    domain = models.PositiveSmallIntegerField(choices=DOMAIN_CHOICES, default=2)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     first_emailed_at = models.DateTimeField(null=True, db_index=True)
     last_used_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -343,7 +344,7 @@ class DomainAddress(models.Model):
     def delete(self, *args, **kwargs):
         # TODO: create hard bounce receipt rule in AWS for the address
         deleted_address = DeletedAddress.objects.create(
-            address_hash=address_hash(self.address, self.user_profile.subdomain),
+            address_hash=address_hash(self.address, self.user_profile.subdomain, self.domain),
             num_forwarded=self.num_forwarded,
             num_blocked=self.num_blocked,
             num_spam=self.num_spam,
