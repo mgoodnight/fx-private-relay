@@ -41,7 +41,9 @@
         </div>
         {% if not user_profile.subdomain %}
           <div class="mpp-dashbaord-header-action">
-            <button class="mpp-action-link"> <img class="margin-right" src="/static/images/icon-check.svg" alt=""> {% ftlmsg 'profile-label-create-domain' %}</button>
+            <a href="#mpp-choose-subdomain" class="mpp-action-link">
+              <img class="margin-right" src="/static/images/icon-check.svg" alt=""> {% ftlmsg 'profile-label-create-domain' %}
+            </a>
           </div>
         {% else %}
           <div class="mpp-dashbaord-header-action">
